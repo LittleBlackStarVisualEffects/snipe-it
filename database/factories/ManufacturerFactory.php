@@ -212,4 +212,19 @@ class ManufacturerFactory extends Factory
             ];
         });
     }
+
+    public function xssTestManufacturer()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest manufacturer')</script>",
+                'support_phone'  => "<script>alert('xssTest manufacturer phone')</script>",
+                'tag_color'  => "<script>alert('xssTest manufacturer tag')</script>",
+                'image' => 'demo-xss.jpg',
+                'created_by' => function () {
+                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+                },
+            ];
+        });
+    }
 }

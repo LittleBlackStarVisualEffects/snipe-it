@@ -215,4 +215,16 @@ class CategoryFactory extends Factory
             'require_acceptance' => false,
         ]);
     }
+
+    public function xssTestCategory()
+    {
+        return $this->state([
+            'name' => "<script>alert('xssTest license')</script>",
+            'category_type' => 'accessory',
+            'notes'  => "<script>alert('xssTest category notes')</script>",
+            'created_by' => function () {
+                return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+            },
+        ]);
+    }
 }

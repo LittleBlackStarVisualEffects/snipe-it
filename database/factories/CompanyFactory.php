@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CompanyFactory extends Factory
@@ -27,5 +28,17 @@ class CompanyFactory extends Factory
             'notes'   => 'Created by DB seeder',
             'tag_color' => $this->faker->hexColor(),
         ];
+    }
+
+    public function xssTestCompany()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest company')</script>",
+                'tag_color'  => "<script>alert('xssTest company tag')</script>",
+                'notes'  => "<script>alert('xssTest company notes')</script>",
+
+            ];
+        });
     }
 }

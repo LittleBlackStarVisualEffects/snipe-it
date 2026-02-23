@@ -40,4 +40,25 @@ class SupplierFactory extends Factory
             'zip' => $this->faker->postCode(),
         ];
     }
+
+    public function xssTestSupplier()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest supplier')</script>",
+                'url'  => "https://xssTest.<script>alert('xssTest supplier url')</script>.com",
+                'phone'  => "<script>alert('xssTest supplier phone')</script>",
+                'fax'  => "<script>alert('xssTest supplier fax')</script>",
+                'contact'  => "<script>alert('xssTest supplier contact')</script>",
+                'tag_color'  => "<script>alert('xssTest supplier tag')</script>",
+                'notes'  => "<script>alert('xssTest supplier notes')</script>",
+                'address'  => "<script>alert('xssTest supplier address')</script>",
+                'address2'  => "<script>alert('xssTest supplier address2')</script>",
+                'city'  => "<script>alert('xssTest supplier city')</script>",
+                'state'  => "<script>alert('xssTest supplier state')</script>",
+                'country'  => "<script>alert('xssTest supplier country')</script>",
+                'zip'  => "<script>alert('xssTest supplier zip')</script>",
+            ];
+        });
+    }
 }

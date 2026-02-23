@@ -20,6 +20,8 @@ class DepartmentSeeder extends Seeder
         $locationIds = Location::all()->pluck('id');
 
         $admin = User::where('permissions->superuser', '1')->first() ?? User::factory()->firstAdmin()->create();
+        $xssAdmin = User::where('username','=',"<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+
 
         Department::factory()->count(1)->hr()->create([
             'location_id' => $locationIds->random(),
@@ -50,5 +52,7 @@ class DepartmentSeeder extends Seeder
             'location_id' => $locationIds->random(),
             'created_by' => $admin->id,
         ]);
+
+        Department::factory()->count(1)->xssTestDepartment()->create(['created_by' => $xssAdmin->id]);
     }
 }

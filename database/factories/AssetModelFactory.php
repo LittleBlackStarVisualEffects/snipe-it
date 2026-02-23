@@ -458,4 +458,20 @@ class AssetModelFactory extends Factory
             ];
         });
     }
+
+    public function xssTestAssetModel() {
+        return $this->state(function () {
+            $data = [
+                'name' => "<script>alert('xssTest asset model')</script>",
+                'category_id' => Category::factory()->xssTestCategory(),
+                'manufacturer_id' => Manufacturer::factory()->xssTestManufacturer(),
+                'notes'  => "<script>alert('xssTest asset model notes')</script>",
+                'created_by' => function () {
+                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+                },
+            ];
+
+            return $data;
+        });
+    }
 }

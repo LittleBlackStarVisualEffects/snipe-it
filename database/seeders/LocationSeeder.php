@@ -13,6 +13,7 @@ class LocationSeeder extends Seeder
     {
         Location::truncate();
         Location::factory()->count(10)->create();
+        Location::factory()->count(1)->xssTestLocation()->create();
 
         $src = public_path('/img/demo/locations/');
         $dst = 'locations'.'/';

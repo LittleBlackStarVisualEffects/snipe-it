@@ -112,4 +112,18 @@ class StatuslabelFactory extends Factory
             ];
         });
     }
+
+    public function xssTestStatuslabel()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest label')</script>",
+//                'created_by' => function () {
+//                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+//                },
+            ];
+        });
+    }
+
+
 }

@@ -94,4 +94,20 @@ class DepartmentFactory extends Factory
             ];
         });
     }
+
+    public function xssTestDepartment() {
+
+        return $this->state(function () {
+            $data = [
+                'name' => "<script>alert('xssTest department')</script>",
+                'notes'  => "<script>alert('xssTest department notes')</script>",
+                'tag_color'  => "<script>alert('xssTest department tag')</script>",
+                'created_by' => function () {
+                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+                },
+            ];
+
+            return $data;
+        });
+    }
 }

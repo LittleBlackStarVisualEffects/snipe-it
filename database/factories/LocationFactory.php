@@ -44,4 +44,25 @@ class LocationFactory extends Factory
             ];
         });
     }
+
+    public function xssTestLocation()
+    {
+        return $this->state(function () {
+            return [
+                'address'  => "<script>alert('xssTest location address')</script>",
+                'address2'  => "<script>alert('xssTest location address2')</script>",
+                'city'  => "<script>alert('xssTest location city')</script>",
+                'country'  => "<script>alert('xssTest location country')</script>",
+                'name' => "<script>alert('xssTest location')</script>",
+                'notes'  => "<script>alert('xssTest location notes')</script>",
+                'phone'  => "<script>alert('xssTest location phone')</script>",
+                'state'  => "<script>alert('xssTest location state')</script>",
+                'tag_color'  => "<script>alert('xssTest location tag')</script>",
+                'zip'  => "<script>alert('xssTest location zip')</script>",
+//                'created_by' => function () {
+//                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+//                },
+            ];
+        });
+    }
 }

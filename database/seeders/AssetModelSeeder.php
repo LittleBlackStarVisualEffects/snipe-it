@@ -45,6 +45,7 @@ class AssetModelSeeder extends Seeder
         // Displays
         AssetModel::factory()->count(1)->ultrafine()->create(['created_by' => $admin->id]);
         AssetModel::factory()->count(1)->ultrasharp()->create(['created_by' => $admin->id]);
+        AssetModel::factory()->count(1)->xssTestAssetModel()->create();
 
         $src = public_path('/img/demo/models/');
         $dst = 'models'.'/';

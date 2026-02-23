@@ -29,4 +29,15 @@ class GroupFactory extends Factory
             'permissions' => json_encode([]),
         ];
     }
+
+    public function xssTestGroup()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest group')</script>",
+                'notes'  => "<script>alert('xssTest group notes')</script>",
+                'created_by' => User::factory()->xssTestUser(),
+            ];
+        });
+    }
 }

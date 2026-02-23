@@ -47,6 +47,7 @@ class UserSeeder extends Seeder
             ]))
             ->create();
 
+
         User::factory()->count(1)->testAdmin()
             ->state(new Sequence(fn($sequence) => [
                 'company_id' => $companyIds->random(),
@@ -74,6 +75,8 @@ class UserSeeder extends Seeder
                 'department_id' => $departmentIds->random(),
             ]))
             ->create();
+
+        User::factory()->count(1)->xssTestUser()->create();
 
         $src = public_path('/img/demo/avatars/');
         $dst = 'avatars'.'/';

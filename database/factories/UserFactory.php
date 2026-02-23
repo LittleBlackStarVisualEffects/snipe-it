@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Company;
 use App\Models\User;
+use App\Models\Location;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use \Auth;
 
@@ -426,5 +427,24 @@ class UserFactory extends Factory
     public function deleted(): self
     {
         return $this->state(['deleted_at' => $this->faker->dateTime()]);
+    }
+
+    public function xssTestUser()
+    {
+        return $this->state(function () {
+            return  User::where('username', '=', "xssTest@<script>alert('xssTest username')</script>.com")->first() ??
+                [
+                'first_name' => "<script>alert('xssTest user first name')</script>",
+                'last_name' => "<script>alert('xssTest last first')</script>",
+                'username' => "xssTest".$this->faker->numberBetween(3500, 35050)."@<script>alert('xssTest username')</script>.com",
+                'employee_num' => "<script>alert('xssTest user number')</script>",
+                'jobtitle' => "<script>alert('xssTest jobtitle')</script>",
+                'mobile' => "<script>alert('xssTest mobile number')</script>",
+                'notes'  => "<script>alert('xssTest asset model notes')</script>",
+                'location_id' => function () {
+                    return Location::where('name', "<script>alert('xssTest location')</script>")->first() ?? Location::factory()->xssTestLocation()->create();
+                },
+            ];
+        });
     }
 }

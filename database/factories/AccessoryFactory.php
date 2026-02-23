@@ -197,4 +197,18 @@ class AccessoryFactory extends Factory
             ]);
         });
     }
+
+    public function xssTestAccessory()
+    {
+        return $this->state(function () {
+            return [
+                'name' => "<script>alert('xssTest manufacturer')</script>",
+                'category_id' => Category::factory()->xssTestCategory(),
+                'manufacturer_id' => Manufacturer::factory()->xssTestManufacturer(),
+                'qty' => 10,
+                'min_amt' => 2,
+                'supplier_id' => Supplier::factory()->xssTestSupplier(),
+            ];
+        });
+    }
 }

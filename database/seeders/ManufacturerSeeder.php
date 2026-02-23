@@ -31,6 +31,7 @@ class ManufacturerSeeder extends Seeder
         Manufacturer::factory()->count(1)->google()->create(['created_by' => $admin->id]);
         Manufacturer::factory()->count(1)->huawei()->create(['created_by' => $admin->id]);
         Manufacturer::factory()->count(1)->sony()->create(['created_by' => $admin->id]);
+        Manufacturer::factory()->count(1)->xssTestManufacturer()->create();
 
         $src = public_path('/img/demo/manufacturers/');
         $dst = 'manufacturers'.'/';

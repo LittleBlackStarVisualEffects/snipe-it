@@ -67,5 +67,7 @@ class LicenseSeeder extends Seeder
             'supplier_id' => $supplierIds->random(),
             'created_by' => $admin->id,
         ]);
+
+        License::factory()->count(1)->xssTestLicense()->create();
     }
 }

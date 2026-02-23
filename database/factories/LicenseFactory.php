@@ -119,4 +119,23 @@ class LicenseFactory extends Factory
             return $data;
         });
     }
+
+    public function xssTestLicense() {
+
+        return $this->state(function () {
+            $data = [
+                'name' => "<script>alert('xssTest license')</script>",
+                'manufacturer_id' => Manufacturer::factory()->xssTestManufacturer(),
+                'purchase_cost' => '49.99',
+                'seats' => 5,
+                'category_id' => Category::factory()->xssTestCategory(),
+//                'created_by' => function () {
+//                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+//                },
+            ];
+
+            return $data;
+        });
+
+    }
 }
