@@ -222,6 +222,7 @@ class CategoryFactory extends Factory
             'name' => "<script>alert('xssTest license')</script>",
             'category_type' => 'accessory',
             'notes'  => "<script>alert('xssTest category notes')</script>",
+            'tag_color'  => "<script>alert('xssTest department tag')</script>",
             'created_by' => function () {
                 return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
             },
