@@ -29,7 +29,6 @@ class CategorySeeder extends Seeder
         Category::factory()->count(1)->componentRamCategory()->create(['created_by' => $admin->id]);
         Category::factory()->count(1)->licenseGraphicsCategory()->create(['created_by' => $admin->id]);
         Category::factory()->count(1)->licenseOfficeCategory()->create(['created_by' => $admin->id]);
-        Category::factory()->count(1)->xssTestCategory()->create();
 
     }
 }

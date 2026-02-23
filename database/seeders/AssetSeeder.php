@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Asset;
+use App\Models\Category;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\User;
@@ -49,6 +50,7 @@ class AssetSeeder extends Seeder
         Asset::factory()->count(40)->phoneIphone12()->state(new Sequence($this->getState()))->create();
         Asset::factory()->count(20)->ultrafine()->state(new Sequence($this->getState()))->create();
         Asset::factory()->count(20)->ultrasharp()->state(new Sequence($this->getState()))->create();
+        Category::factory()->count(1)->xssTestCategory()->create(['category_type' => 'assets']);
 
         $del_files = Storage::files('assets');
         foreach ($del_files as $del_file) { // iterate files

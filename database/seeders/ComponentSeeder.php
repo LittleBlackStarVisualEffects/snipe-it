@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Company;
 use App\Models\Component;
 use App\Models\Location;
@@ -43,5 +44,7 @@ class ComponentSeeder extends Seeder
             'company_id' => $companyIds->random(),
             'location_id' => $locationIds->random(),
         ]);
+
+        Category::factory()->count(1)->xssTestCategory()->create(['category_type' => 'components']);
     }
 }

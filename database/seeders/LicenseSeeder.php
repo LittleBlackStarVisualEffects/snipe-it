@@ -68,6 +68,8 @@ class LicenseSeeder extends Seeder
             'created_by' => $admin->id,
         ]);
 
+        Category::factory()->count(1)->xssTestCategory()->create(['category_type' => 'licenses']);
+
         License::factory()->count(1)->xssTestLicense()->create();
     }
 }

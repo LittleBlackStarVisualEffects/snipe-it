@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Accessory;
+use App\Models\Category;
 use App\Models\Location;
 use App\Models\Supplier;
 use App\Models\User;
@@ -27,6 +28,8 @@ class AccessorySeeder extends Seeder
         if (! Supplier::count()) {
             $this->call(SupplierSeeder::class);
         }
+
+        Category::factory()->count(1)->xssTestCategory()->create(['category_type' => 'accessory']);
 
         $supplierIds = Supplier::all()->pluck('id');
 

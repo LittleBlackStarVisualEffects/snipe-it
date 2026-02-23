@@ -118,9 +118,9 @@ class StatuslabelFactory extends Factory
         return $this->state(function () {
             return [
                 'name' => "<script>alert('xssTest label')</script>",
-//                'created_by' => function () {
-//                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
-//                },
+                'created_by' => function () {
+                    return User::where('username', "<script>alert('xssTest username')</script>@example.org")->first() ?? User::factory()->xssTestUser()->create();
+                },
             ];
         });
     }
