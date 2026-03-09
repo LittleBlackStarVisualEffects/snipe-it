@@ -4,8 +4,8 @@
 
 $icon = '';
 $files = [
-    'storage/oauth-private.key' => '0600',
-    'storage/oauth-public.key' => '0660',
+    'storage/oauth-private.key' => '660',
+    'storage/oauth-public.key' => '660',
 ];
 
 echo "\n";
