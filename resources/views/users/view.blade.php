@@ -83,16 +83,18 @@
           </a>
         </li>
 
-        <li>
-          <a href="#files" data-toggle="tab">
-            <span class="hidden-lg hidden-md">
-                <x-icon type="files" class="fa-2x" />
-            </span>
-            <span class="hidden-xs hidden-sm">{{ trans('general.file_uploads') }}
-              {!! ($user->uploads->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($user->uploads->count()).'</span>' : '' !!}
-            </span>
-          </a>
-        </li>
+          @can('update', $user)
+            <li>
+              <a href="#files" data-toggle="tab">
+                <span class="hidden-lg hidden-md">
+                    <x-icon type="files" class="fa-2x" />
+                </span>
+                <span class="hidden-xs hidden-sm">{{ trans('general.file_uploads') }}
+                  {!! ($user->uploads->count() > 0 ) ? '<span class="badge badge-secondary">'.number_format($user->uploads->count()).'</span>' : '' !!}
+                </span>
+              </a>
+            </li>
+          @endcan
 
           <li>
               <a href="#eulas" data-toggle="tab">
@@ -160,7 +162,7 @@
           </li>
         @endcan
 
-        @can('update', \App\Models\User::class)
+        @can('manageFiles', $user)
           <li class="pull-right">
               <a href="#" data-toggle="modal" data-target="#uploadFileModal">
               <span class="hidden-xs"><x-icon type="paperclip" /></span>
@@ -375,6 +377,7 @@
                    </div>
                    @endif
 
+                   @can('manageContactInfo', $user)
                     <!-- address -->
                     @if (($user->address) || ($user->city) || ($user->state) || ($user->country))
                     <div class="row">
@@ -402,6 +405,7 @@
                       </div>
                     </div>
                     @endif
+                   @endcan
 
                    <!-- company -->
                    @if (!is_null($user->company))
@@ -512,6 +516,7 @@
                     @endif
 
 
+                   @can('manageContactInfo', $user)
                     @if ($user->email)
                     <!-- email -->
                     <div class="row">
@@ -525,6 +530,7 @@
                       </div>
                     </div>
                     @endif
+
 
                     @if ($user->website)
                      <!-- website -->
@@ -565,6 +571,7 @@
                            </div>
                        </div>
                    @endif
+                   @endcan
                     @if ($user->userloc)
                      <!-- location -->
                      <div class="row">
@@ -997,6 +1004,7 @@
           </table>
         </div><!-- /consumables-tab -->
 
+        @can('manageFiles', $user)
         <div class="tab-pane" id="files">
           <div class="row">
 
@@ -1005,6 +1013,7 @@
             </div>
           </div> <!--/ROW-->
         </div><!--/FILES-->
+        @endcan
 
           <div class="tab-pane" id="eulas">
               <table
@@ -1114,7 +1123,7 @@
   @stop
 
 @section('moar_scripts')
-  @include ('partials.bootstrap-table', ['simple_view' => true])
+    @include ('partials.bootstrap-table', ['simple_view' => true])
 <script nonce="{{ csrf_token() }}">
 $(function () {
 

@@ -128,7 +128,11 @@ class UserPresenter extends Presenter
                 'title' => trans('admin/users/general.remote'),
                 'visible' => false,
                 'formatter' => 'trueFalseFormatter',
-            ],
+            ]
+            ];
+
+
+        $sensitive_fields = [
             [
                 'field' => 'email',
                 'searchable' => true,
@@ -204,8 +208,14 @@ class UserPresenter extends Presenter
                 'switchable' => true,
                 'title' => trans('general.zip'),
                 'visible' => false,
-            ],
+            ]
+        ];
 
+        if (auth()->user()->can('manageContactInfo')) {
+            array_push($layout, $sensitive_fields);
+        }
+
+        array_push($layout,
             [
                 'field' => 'locale',
                 'searchable' => true,
@@ -434,8 +444,8 @@ class UserPresenter extends Presenter
                 'formatter' => 'usersActionsFormatter',
                 'printIgnore' => true,
                 'class' => 'hidden-print',
-            ],
-        ];
+            ]
+        );
 
         return json_encode($layout);
     }
@@ -448,31 +458,6 @@ class UserPresenter extends Presenter
 
         return '';
     }
-
-    /**
-     * Returns the user full name, it simply concatenates
-     * the user first and last name.
-     *
-     * @return string
-     */
-//    public function fullName()
-//    {
-//        if ($this->display_name) {
-//            return 'kjdfh'.html_entity_decode($this->display_name, ENT_QUOTES | ENT_XML1, 'UTF-8');
-//        }
-//        return 'roieuoe'.html_entity_decode($this->first_name.' '.$this->last_name, ENT_QUOTES | ENT_XML1, 'UTF-8');
-//    }
-
-//    /**
-//     * Standard accessor.
-//     * @TODO Remove presenter::fullName() entirely?
-//     * @return string
-//     */
-//    public function name()
-//    {
-//        return $this->fullName();
-//    }
-
 
 
     /**
@@ -558,4 +543,6 @@ class UserPresenter extends Presenter
 
         return '<span class="'. (($this->deleted_at!='') ? 'deleted' : '').'">'.e($this->display_name).'</span>';
     }
+
+
 }

@@ -111,6 +111,11 @@ class UserFactory extends Factory
             ];
         });
     }
+    
+    public function manageContactInfo()
+    {
+        return $this->appendPermission(['users.contact' => '1']);
+    }
 
     public function viewAssets()
     {

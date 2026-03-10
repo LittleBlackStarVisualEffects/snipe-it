@@ -39,8 +39,8 @@
 
 </style>
 
-<div class="row">
-  <div class="col-md-8 col-md-offset-2">
+<x-container class="col-md-6 col-md-offset-3">
+
       <form class="form-horizontal" method="post" autocomplete="off"
             action="{{ (isset($user->id)) ? route('users.update', ['user' => $user->id]) : route('users.store') }}"
             enctype="multipart/form-data" id="userForm">
@@ -237,57 +237,58 @@
                           </div>
                   </div>
 
-                  <!-- Email -->
-                <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                  <label class="col-md-3 control-label" for="email">{{ trans('admin/users/table.email') }} </label>
-                  <div class="col-md-6">
-                        <input class="form-control" type="email" name="email" id="email" maxlength="191" value="{{ old('email', $user->email) }}" autocomplete="off"
-                          readonly onfocus="this.removeAttribute('readonly');" {{  (Helper::checkIfRequired($user, 'email')) ? ' required' : '' }}{!! (!Gate::allows('canEditAuthFields', $user)) || ((!Gate::allows('editableOnDemo')) && ($user->id)) ? ' style="cursor: not-allowed" disabled ' : '' !!}>
+                  @can('manageContactInfo', $user)
+                      <!-- Email -->
+                    <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                      <label class="col-md-3 control-label" for="email">{{ trans('admin/users/table.email') }} </label>
+                      <div class="col-md-6">
+                            <input class="form-control" type="email" name="email" id="email" maxlength="191" value="{{ old('email', $user->email) }}" autocomplete="off"
+                              readonly onfocus="this.removeAttribute('readonly');" {{  (Helper::checkIfRequired($user, 'email')) ? ' required' : '' }}{!! (!Gate::allows('canEditAuthFields', $user)) || ((!Gate::allows('editableOnDemo')) && ($user->id)) ? ' style="cursor: not-allowed" disabled ' : '' !!}>
 
-                          @cannot('canEditAuthFields', $user)
-                              <!-- authed user is an admin or regular user and is trying to edit someone higher -->
-                              <p class="help-block">
-                                  <x-icon type="locked" />
-                                  {{ trans('general.action_permission_generic', ['action' => trans('general.edit'), 'item_type' => trans('general.email')]) }}
-                              </p>
-                          @endcannot
-
-
-                            @if (!Gate::allows('editableOnDemo') && ($user->id))
-                              <p class="text-warning">
-                                  <x-icon type="locked" />
-                                  {{ trans('admin/users/table.lock_passwords') }}
-                              </p>
-                          @endif
-
-                        {!! $errors->first('email', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                              @cannot('canEditAuthFields', $user)
+                                  <!-- authed user is an admin or regular user and is trying to edit someone higher -->
+                                  <p class="help-block">
+                                      <x-icon type="locked" />
+                                      {{ trans('general.action_permission_generic', ['action' => trans('general.edit'), 'item_type' => trans('general.email')]) }}
+                                  </p>
+                              @endcannot
 
 
-                  </div>
-                </div>
+                                @if (!Gate::allows('editableOnDemo') && ($user->id))
+                                  <p class="text-warning">
+                                      <x-icon type="locked" />
+                                      {{ trans('admin/users/table.lock_passwords') }}
+                                  </p>
+                              @endif
 
-                  <!-- Send welcome email to user -->
-                  @if (!$user->id)
-                      <div class="form-group" id="email_user_row">
+                            {!! $errors->first('email', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
 
-                          <div class="col-md-8 col-md-offset-3">
-                              <label class="form-control form-control--disabled">
-                                  <input
-                                      type="checkbox"
-                                      name="send_welcome"
-                                      id="email_user_checkbox"
-                                      value="1"
-                                      aria-label="send_welcome"
-                                      @checked(old('send_welcome'))
-                                  />
-                                  {{ trans('general.send_welcome_email_to_users') }}
-                              </label>
+                      </div>
+                    </div>
 
-                              <p class="help-block"> {{ trans('general.send_welcome_email_help') }}</p>
+                      <!-- Send welcome email to user -->
+                      @if (!$user->id)
+                          <div class="form-group" id="email_user_row">
 
-                          </div>
-                      </div> <!--/form-group-->
-                  @endif
+                              <div class="col-md-8 col-md-offset-3">
+                                  <label class="form-control form-control--disabled">
+                                      <input
+                                          type="checkbox"
+                                          name="send_welcome"
+                                          id="email_user_checkbox"
+                                          value="1"
+                                          aria-label="send_welcome"
+                                          @checked(old('send_welcome'))
+                                      />
+                                      {{ trans('general.send_welcome_email_to_users') }}
+                                  </label>
+
+                                  <p class="help-block"> {{ trans('general.send_welcome_email_help') }}</p>
+
+                              </div>
+                          </div> <!--/form-group-->
+                      @endif
+                  @endcan
 
                   
                   @include ('partials.forms.edit.image-upload', ['fieldname' => 'avatar', 'image_path' => app('users_upload_path')])
@@ -444,92 +445,94 @@
                               <!-- Location -->
                               @include ('partials.forms.edit.location-select', ['translated_name' => trans('general.location'), 'fieldname' => 'location_id'])
 
-                              <!-- Phone -->
-                              <div class="form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="phone">{{ trans('admin/users/table.phone') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" maxlength="191" />
-                                      {!! $errors->first('phone', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                              @can('manageContactInfo', $user)
+                                  <!-- Phone -->
+                                  <div class="form-group {{ $errors->has('phone') ? 'has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="phone">{{ trans('admin/users/table.phone') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" maxlength="191" />
+                                          {!! $errors->first('phone', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- Mobile -->
-                              <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="phone">{{ trans('admin/users/table.mobile') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="text" name="mobile" id="mobile" value="{{ old('mobile', $user->mobile) }}" maxlength="191" />
-                                      {!! $errors->first('mobile', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                  <!-- Mobile -->
+                                  <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="phone">{{ trans('admin/users/table.mobile') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="text" name="mobile" id="mobile" value="{{ old('mobile', $user->mobile) }}" maxlength="191" />
+                                          {!! $errors->first('mobile', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- Website URL -->
-                              <div class="form-group {{ $errors->has('website') ? ' has-error' : '' }}">
-                                  <label for="website" class="col-md-3 control-label">{{ trans('general.website') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="url" name="website" id="website" value="{{ old('website', $user->website) }}" maxlength="191" />
-                                      {!! $errors->first('website', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
+                                  <!-- Website URL -->
+                                  <div class="form-group {{ $errors->has('website') ? ' has-error' : '' }}">
+                                      <label for="website" class="col-md-3 control-label">{{ trans('general.website') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="url" name="website" id="website" value="{{ old('website', $user->website) }}" maxlength="191" />
+                                          {!! $errors->first('website', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- Address -->
-                              <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="address">{{ trans('general.address') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="text" name="address" id="address" value="{{ old('address', $user->address) }}" maxlength="191" />
-                                      {!! $errors->first('address', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                  <!-- Address -->
+                                  <div class="form-group{{ $errors->has('address') ? ' has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="address">{{ trans('general.address') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="text" name="address" id="address" value="{{ old('address', $user->address) }}" maxlength="191" />
+                                          {!! $errors->first('address', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- City -->
-                              <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="city">{{ trans('general.city') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="text" name="city" id="city" aria-label="city" value="{{ old('city', $user->city) }}" maxlength="191" />
-                                      {!! $errors->first('city', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                  <!-- City -->
+                                  <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="city">{{ trans('general.city') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="text" name="city" id="city" aria-label="city" value="{{ old('city', $user->city) }}" maxlength="191" />
+                                          {!! $errors->first('city', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- State -->
-                              <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="state">{{ trans('general.state') }}</label>
-                                  <div class="col-md-6">
-                                      <input class="form-control" type="text" name="state" id="state" value="{{ old('state', $user->state) }}" maxlength="191" />
-                                      {!! $errors->first('state', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                  <!-- State -->
+                                  <div class="form-group{{ $errors->has('state') ? ' has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="state">{{ trans('general.state') }}</label>
+                                      <div class="col-md-6">
+                                          <input class="form-control" type="text" name="state" id="state" value="{{ old('state', $user->state) }}" maxlength="191" />
+                                          {!! $errors->first('state', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- Country -->
-                              <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="country">{{ trans('general.country') }}</label>
-                                  <div class="col-md-6">
-                                      <x-input.country-select
-                                        name="country"
-                                        :selected="old('country', $user->country)"
-                                        class="col-md-12"
-                                      />
+                                  <!-- Country -->
+                                  <div class="form-group{{ $errors->has('country') ? ' has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="country">{{ trans('general.country') }}</label>
+                                      <div class="col-md-6">
+                                          <x-input.country-select
+                                            name="country"
+                                            :selected="old('country', $user->country)"
+                                            class="col-md-12"
+                                          />
 
-                                      <p class="help-block">{{ trans('general.countries_manually_entered_help') }}</p>
-                                      {!! $errors->first('country', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                          <p class="help-block">{{ trans('general.countries_manually_entered_help') }}</p>
+                                          {!! $errors->first('country', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
 
-                              <!-- Zip -->
-                              <div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
-                                  <label class="col-md-3 control-label" for="zip">{{ trans('general.zip') }}</label>
-                                  <div class="col-md-3 text-right">
-                                      <input class="form-control" type="text" name="zip" id="zip" value="{{ old('zip', $user->zip) }}" maxlength="10" />
-                                      {!! $errors->first('zip', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                  <!-- Zip -->
+                                  <div class="form-group{{ $errors->has('zip') ? ' has-error' : '' }}">
+                                      <label class="col-md-3 control-label" for="zip">{{ trans('general.zip') }}</label>
+                                      <div class="col-md-3 text-right">
+                                          <input class="form-control" type="text" name="zip" id="zip" value="{{ old('zip', $user->zip) }}" maxlength="10" />
+                                          {!! $errors->first('zip', '<span class="alert-msg" aria-hidden="true">:message</span>') !!}
+                                      </div>
                                   </div>
-                              </div>
-
+                              @endcan
                               <!-- Notes -->
-                              <div class="form-group{!! $errors->has('notes') ? ' has-error' : '' !!}">
-                                  <label for="notes" class="col-md-3 control-label">{{ trans('admin/users/table.notes') }}</label>
-                                  <div class="col-md-6">
-                                      <textarea class="form-control" rows="5" id="notes" name="notes">{{ old('notes', $user->notes) }}</textarea>
-                                      {!! $errors->first('notes', '<span class="alert-msg" aria-hidden="true"><i class="fas fa-times" aria-hidden="true"></i> :message</span>') !!}
-                                  </div>
-                              </div>
+                              <!-- Notes -->
+                              <x-form.row
+                                      :label="trans('general.notes')"
+                                      :item="$user"
+                                      name="notes"
+                                      type="textarea"
+                                      placeholder="{{ trans('general.placeholders.notes') }}"
+                              />
 
                               @if ($snipeSettings->two_factor_enabled!='')
                                   @if ($snipeSettings->two_factor_enabled=='1')
@@ -583,7 +586,7 @@
                                   <label class="col-md-3 control-label" for="groups[]">
                                       {{ trans('general.groups') }}
                                   </label>
-                                  <div class="col-md-6">
+                                  <div class="col-md-8">
 
                                       @if ($groups->count())
                                           @if ((!Gate::allows('editableOnDemo') || (!Auth::user()->isSuperUser())))
@@ -676,7 +679,7 @@
       </div><!-- nav-tabs-custom -->
     </form>
   </div> <!--/col-md-8-->
-</div><!--/row-->
+</x-container>
 @stop
 
 @section('moar_scripts')
