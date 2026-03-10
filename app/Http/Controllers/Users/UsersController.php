@@ -14,6 +14,7 @@ use App\Models\Group;
 use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\WelcomeNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
@@ -540,8 +541,18 @@ class UsersController extends Controller
                 'groups',
                 'userloc',
                 'company'
-            )->orderBy('created_at', 'DESC')
+            ) ->withCount([
+                'assets as assets_count' => function(Builder $query) {
+                    $query->withoutTrashed();
+                },
+                'licenses as licenses_count',
+                'accessories as accessories_count',
+                'consumables as consumables_count',
+                'managesUsers as manages_users_count',
+                'managedLocations as manages_locations_count'
+            ])->orderBy('created_at', 'DESC')
                 ->chunk(500, function ($users) use ($handle) {
+
                     $headers = [
                         // strtolower to prevent Excel from trying to open it as a SYLK file
                         strtolower(trans('general.id')),
@@ -552,20 +563,53 @@ class UsersController extends Controller
                         trans('admin/users/table.last_name'),
                         trans('admin/users/table.name'),
                         trans('admin/users/table.username'),
-                        trans('admin/users/table.email'),
+                        trans('admin/users/table.display_name'),
+                    ];
+
+                    if (auth()->user()->can('manageContactInfo')) {
+                        array_push($headers,
+                                trans('admin/users/table.email'),
+                                trans('admin/users/table.phone'),
+                                trans('admin/users/table.mobile'),
+                                trans('general.address'),
+                                trans('general.city'),
+                                trans('general.state'),
+                                trans('general.country'),
+                                trans('general.zip'),
+                                trans('general.website'));
+
+                    }
+
+                    array_push($headers,
                         trans('admin/users/table.manager'),
                         trans('admin/users/table.location'),
                         trans('general.department'),
+                        trans('admin/users/general.department_manager'),
                         trans('general.assets'),
                         trans('general.licenses'),
                         trans('general.accessories'),
                         trans('general.consumables'),
+                        trans('admin/users/table.managed_users'),
+                        trans('admin/users/table.managed_locations'),
                         trans('general.groups'),
                         trans('general.permissions'),
                         trans('general.notes'),
                         trans('admin/users/table.activated'),
+                        trans('admin/settings/general.ldap_enabled'),
+                        trans('admin/users/general.two_factor_enrolled'),
+                        trans('admin/users/general.two_factor_active'),
+                        trans('general.autoassign_licenses'),
+                        trans('admin/users/general.remote'),
+                        trans('admin/users/general.vip_label'),
+                        trans('general.language'),
+                        trans('general.start_date'),
+                        trans('general.end_date'),
+                        trans('general.last_login'),
+                        trans('general.updated_at'),
                         trans('general.created_at'),
-                    ];
+                        trans('general.created_by'),
+                    );
+
 
                     fputcsv($handle, $headers);
 
@@ -599,20 +643,53 @@ class UsersController extends Controller
                             $user->last_name,
                             $user->display_name,
                             $user->username,
-                            $user->email,
+                            $user->getRawOriginal('display_name'),
+                        ];
+
+                        if (auth()->user()->can('manageContactInfo')) {
+
+                            array_push($values,
+                                $user->email,
+                                $user->phone,
+                                $user->mobile,
+                                $user->address,
+                                $user->city,
+                                $user->state,
+                                $user->country,
+                                $user->zip,
+                                $user->website,
+                            );
+                        }
+
+                        array_push($values,
                             ($user->manager) ? $user->manager->display_name : '',
                             ($user->userloc) ? $user->userloc->name : '',
                             ($user->department) ? $user->department->name : '',
+                            (($user->department) && ($user->department->manager)) ? $user->department->manager->display_name : '',
                             $user->assets->count(),
-                            $user->licenses->count(),
-                            $user->accessories->count(),
-                            $user->consumables->count(),
+                            $user->licenses_count,
+                            $user->accessories_count,
+                            $user->consumables_count,
+                            $user->manages_users_count,
+                            $user->manages_locations_count,
                             $user_groups,
                             $permissionstring,
                             $user->notes,
                             ($user->activated == '1') ? trans('general.yes') : trans('general.no'),
+                            ($user->ldap_import == '1') ? trans('general.yes') : trans('general.no'),
+                            ($user->two_factor_active_and_enrolled()) ? trans('general.yes') : trans('general.no'),
+                            ($user->two_factor_active()) ? trans('general.yes') : trans('general.no'),
+                            ($user->autoassign_licenses == '1') ? trans('general.yes') : trans('general.no'),
+                            ($user->remote == '1') ? trans('general.yes') : trans('general.no'),
+                            ($user->vip == '1') ? trans('general.yes') : trans('general.no'),
+                            $user->locale,
+                            $user->start_date,
+                            $user->end_date,
+                            $user->last_login,
+                            $user->updated_at,
                             $user->created_at,
-                        ];
+                            $user->createdBy?->display_name,
+                        );
 
                         fputcsv($handle, $values);
                     }
