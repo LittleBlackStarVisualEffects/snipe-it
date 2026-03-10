@@ -607,7 +607,8 @@ class BreadcrumbsServiceProvider extends ServiceProvider
 
         Breadcrumbs::for('users.edit', fn (Trail $trail, User $user) =>
         $trail->parent('users.index', route('users.index'))
-            ->push(trans('general.breadcrumb_button_actions.edit_item', ['name' => $user->name]), route('users.edit', $user))
+            ->push($user->display_name, route('users.show', $user))
+            ->push(trans('general.update'), route('users.edit', $user))
         );
 
 
