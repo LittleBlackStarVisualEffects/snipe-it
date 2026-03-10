@@ -226,6 +226,16 @@ return array(
     'usersdelete' => [
         'name' => 'Delete Users',
     ],
+
+    'usersfiles' => [
+        'name' => 'Manage User Files',
+        'note' => 'Allows the user to view, upload, download, and delete files associated with users.',
+    ],
+
+    'userscontact' => [
+        'name' => 'View/Edit User Contact Info',
+        'note' => 'Allows the user to view and edit personal contact information about the user. This includes: address, city, state/province, country, postal code, phone number, mobile number, email and website. ',
+    ],
     'models'   => [
         'name' => 'Models',
         'note'       => 'Grants access to the Models section of the application.',

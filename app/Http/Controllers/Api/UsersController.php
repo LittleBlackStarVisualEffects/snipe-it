@@ -109,7 +109,6 @@ class UsersController extends Controller
                 'last_name',
                 'first_name',
                 'display_name',
-                'email',
                 'jobtitle',
                 'username',
                 'employee_num',
@@ -126,13 +125,6 @@ class UsersController extends Controller
                 'accessories_count',
                 'manages_users_count',
                 'manages_locations_count',
-                'phone',
-                'mobile',
-                'address',
-                'city',
-                'state',
-                'country',
-                'zip',
                 'id',
                 'ldap_import',
                 'two_factor_optin',
@@ -142,7 +134,6 @@ class UsersController extends Controller
                 'start_date',
                 'end_date',
                 'autoassign_licenses',
-                'website',
                 'locale',
                 'notes',
                 'employee_num',
@@ -158,6 +149,21 @@ class UsersController extends Controller
                 'created_by',
 
             ];
+
+        // Do not even request these fields if the requesting user cannot manage user contact info
+        if (auth()->user()->can('manageContactInfo')) {
+            array_push($allowed_columns,
+                'address',
+                'city',
+                'country',
+                'email',
+                'mobile',
+                'phone',
+                'state',
+                'website',
+                'zip',
+            );
+        }
 
         $filter = [];
 
@@ -196,13 +202,39 @@ class UsersController extends Controller
             $users = $users->where('users.company_id', '=', $request->input('company_id'));
         }
 
-        if ($request->filled('phone')) {
-            $users = $users->where('users.phone', '=', $request->input('phone'));
+
+        // Check that the user can view contact info
+        if (auth()->user()->can('manageContactInfo')) {
+
+            if ($request->filled('phone')) {
+                $users = $users->where('users.phone', '=', $request->input('phone'));
+            }
+
+            if ($request->filled('mobile')) {
+                $users = $users->where('users.mobile', '=', $request->input('mobile'));
+            }
+
+            if ($request->filled('email')) {
+                $users = $users->where('users.email', '=', $request->input('email'));
+            }
+
+            if ($request->filled('state')) {
+                $users = $users->where('users.state', '=', $request->input('state'));
+            }
+
+            if ($request->filled('country')) {
+                $users = $users->where('users.country', '=', $request->input('country'));
+            }
+
+            if ($request->filled('website')) {
+                $users = $users->where('users.website', '=', $request->input('website'));
+            }
+
+            if ($request->filled('zip')) {
+                $users = $users->where('users.zip', '=', $request->input('zip'));
+            }
         }
 
-        if ($request->filled('mobile')) {
-            $users = $users->where('users.mobile', '=', $request->input('mobile'));
-        }
 
         if ($request->filled('location_id')) {
             $users = $users->where('users.location_id', '=', $request->input('location_id'));
@@ -210,10 +242,6 @@ class UsersController extends Controller
 
         if ($request->filled('created_by')) {
             $users = $users->where('users.created_by', '=', $request->input('created_by'));
-        }
-
-        if ($request->filled('email')) {
-            $users = $users->where('users.email', '=', $request->input('email'));
         }
 
         if ($request->filled('username')) {
@@ -236,21 +264,6 @@ class UsersController extends Controller
             $users = $users->where('users.employee_num', '=', $request->input('employee_num'));
         }
 
-        if ($request->filled('state')) {
-            $users = $users->where('users.state', '=', $request->input('state'));
-        }
-
-        if ($request->filled('country')) {
-            $users = $users->where('users.country', '=', $request->input('country'));
-        }
-
-        if ($request->filled('website')) {
-            $users = $users->where('users.website', '=', $request->input('website'));
-        }
-
-        if ($request->filled('zip')) {
-            $users = $users->where('users.zip', '=', $request->input('zip'));
-        }
 
         if ($request->filled('group_id')) {
             $users = $users->ByGroup($request->input('group_id'));

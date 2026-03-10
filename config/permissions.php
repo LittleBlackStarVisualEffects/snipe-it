@@ -251,6 +251,14 @@ return [
             'permission' => 'users.delete',
             'display'    => true,
         ],
+        [
+            'permission' => 'users.files',
+            'display'    => true,
+        ],
+        [
+            'permission' => 'users.contact',
+            'display'    => true,
+        ],
 
     ],
 

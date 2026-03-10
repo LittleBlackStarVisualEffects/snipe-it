@@ -148,7 +148,7 @@ class BulkUsersController extends Controller
     {
         $this->authorize('update', User::class);
 
-        if ((! $request->filled('ids')) || $request->input('ids') <= 0) {
+        if ((!$request->filled('ids')) || $request->input('ids') <= 0) {
             return redirect()->back()->with('error', trans('general.no_users_selected'));
         }
         $user_raw_array = $request->input('ids');
@@ -172,8 +172,15 @@ class BulkUsersController extends Controller
             ->conditionallyAddItem('display_name')
             ->conditionallyAddItem('start_date')
             ->conditionallyAddItem('end_date')
-            ->conditionallyAddItem('city')
             ->conditionallyAddItem('autoassign_licenses');
+
+        // Check that the user can manage contact info for users
+        if (auth()->user()->can('manageContactInfo')) {
+            $this->conditionallyAddItem('city')
+                ->conditionallyAddItem('state')
+                ->conditionallyAddItem('country')
+                ->conditionallyAddItem('zip');
+        }
 
 
         // If the manager_id is one of the users being updated, generate a warning.
