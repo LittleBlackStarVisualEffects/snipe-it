@@ -377,7 +377,7 @@
                    </div>
                    @endif
 
-                   @can('manageContactInfo', $user)
+                   @can('manageContactInfo')
                     <!-- address -->
                     @if (($user->address) || ($user->city) || ($user->state) || ($user->country))
                     <div class="row">
@@ -516,7 +516,7 @@
                     @endif
 
 
-                   @can('manageContactInfo', $user)
+                   @can('manageContactInfo')
                     @if ($user->email)
                     <!-- email -->
                     <div class="row">
