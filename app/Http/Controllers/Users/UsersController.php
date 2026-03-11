@@ -682,7 +682,7 @@ class UsersController extends Controller
                             ($user->userloc) ? $user->userloc->name : '',
                             ($user->department) ? $user->department->name : '',
                             (($user->department) && ($user->department->manager)) ? $user->department->manager->display_name : '',
-                            $user->assets->count(),
+                            $user->assets_count,
                             $user->licenses_count,
                             $user->accessories_count,
                             $user->consumables_count,
