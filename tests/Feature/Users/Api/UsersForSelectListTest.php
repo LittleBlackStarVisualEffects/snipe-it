@@ -44,13 +44,25 @@ class UsersForSelectListTest extends TestCase
     {
         User::factory()->create(['first_name' => 'Luke', 'last_name' => 'Skywalker', 'email' => 'luke@jedis.org']);
 
-        Passport::actingAs(User::factory()->create());
+        Passport::actingAs(User::factory()->create()->manageContactInfo());
         $response = $this->getJson(route('api.users.selectlist', ['search' => 'luke@jedis']))->assertOk();
 
         $results = collect($response->json('results'));
 
         $this->assertEquals(1, $results->count());
         $this->assertTrue($results->pluck('text')->contains(fn($text) => str_contains($text, 'Luke')));
+    }
+
+    public function testUsersCannotBeSearchedByEmailWithoutPermission()
+    {
+        User::factory()->create(['first_name' => 'Luke', 'last_name' => 'Skywalker', 'email' => 'luke@jedis.org']);
+
+        Passport::actingAs(User::factory()->create());
+        $response = $this->getJson(route('api.users.selectlist', ['search' => 'luke@jedis']))->assertOk();
+
+        $results = collect($response->json('results'));
+
+        $this->assertEquals(0, $results->count());
     }
 
     public function testUsersScopedToCompanyWhenMultipleFullCompanySupportEnabled()
