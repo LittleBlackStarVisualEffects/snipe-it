@@ -44,7 +44,7 @@ class UsersForSelectListTest extends TestCase
     {
         User::factory()->create(['first_name' => 'Luke', 'last_name' => 'Skywalker', 'email' => 'luke@jedis.org']);
 
-        Passport::actingAs(User::factory()->create()->manageContactInfo());
+        Passport::actingAs(User::factory()->manageContactInfo()->create());
         $response = $this->getJson(route('api.users.selectlist', ['search' => 'luke@jedis']))->assertOk();
 
         $results = collect($response->json('results'));
