@@ -633,14 +633,14 @@ class UsersController extends Controller
 
 
         if (auth()->user()->cannot('manageContactInfo')) {
-            request()->remove('phone');
-            request()->remove('mobile');
-            request()->remove('address');
-            request()->remove('city');
-            request()->remove('state');
-            request()->remove('country');
-            request()->remove('zip');
-            request()->remove('website');
+            $request->request->remove('phone');
+            $request->request->remove('mobile');
+            $request->request->remove('address');
+            $request->request->remove('city');
+            $request->request->remove('state');
+            $request->request->remove('country');
+            $request->request->remove('zip');
+            $request->request->remove('website');
         }
 
 
