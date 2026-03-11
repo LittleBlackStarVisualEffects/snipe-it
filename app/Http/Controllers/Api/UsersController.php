@@ -632,6 +632,18 @@ class UsersController extends Controller
         }
 
 
+        if (auth()->user()->cannot('manageContactInfo')) {
+            request()->remove('phone');
+            request()->remove('mobile');
+            request()->remove('address');
+            request()->remove('city');
+            request()->remove('state');
+            request()->remove('country');
+            request()->remove('zip');
+            request()->remove('website');
+        }
+
+
         if ($request->filled('display_name')) {
             $user->display_name = $request->input('display_name');
         }

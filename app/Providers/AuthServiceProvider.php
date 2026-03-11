@@ -162,6 +162,12 @@ class AuthServiceProvider extends ServiceProvider
             return true;
         });
 
+        Gate::define('manageContactInfo', function ($user) {
+            if ($user->hasAccess('users.contact')) {
+                return true;
+            }
+        });
+
         Gate::define('admin', function ($user) {
             if ($user->hasAccess('admin')) {
                 return true;
