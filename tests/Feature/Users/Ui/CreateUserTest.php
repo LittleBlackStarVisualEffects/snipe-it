@@ -29,7 +29,7 @@ class CreateUserTest extends TestCase
     {
         Notification::fake();
 
-        $response = $this->actingAs(User::factory()->createUsers()->viewUsers()->create())
+        $response = $this->actingAs(User::factory()->createUsers()->viewUsers()->manageContactInfo()->create())
             ->from(route('users.index'))
             ->post(route('users.store'), [
                 'first_name' => 'Test First Name',
@@ -64,7 +64,7 @@ class CreateUserTest extends TestCase
 
         Notification::fake();
 
-        $response = $this->actingAs(User::factory()->createUsers()->viewUsers()->create())
+        $response = $this->actingAs(User::factory()->createUsers()->viewUsers()->manageContactInfo()->create())
             ->from(route('users.index'))
             ->post(route('users.store'), [
                 'first_name' => 'Test First Name',

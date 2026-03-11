@@ -547,6 +547,65 @@ class UsersController extends Controller
             // Open output stream
             $handle = fopen('php://output', 'w');
 
+            $headers = [
+                // strtolower to prevent Excel from trying to open it as a SYLK file
+                strtolower(trans('general.id')),
+                trans('admin/companies/table.title'),
+                trans('admin/users/table.title'),
+                trans('general.employee_number'),
+                trans('admin/users/table.first_name'),
+                trans('admin/users/table.last_name'),
+                trans('admin/users/table.name'),
+                trans('admin/users/table.username'),
+                trans('admin/users/table.display_name'),
+            ];
+
+            if (auth()->user()->can('manageContactInfo')) {
+                array_push($headers,
+                    trans('admin/users/table.email'),
+                    trans('admin/users/table.phone'),
+                    trans('admin/users/table.mobile'),
+                    trans('general.address'),
+                    trans('general.city'),
+                    trans('general.state'),
+                    trans('general.country'),
+                    trans('general.zip'),
+                    trans('general.website'));
+
+            }
+
+            array_push($headers,
+                trans('admin/users/table.manager'),
+                trans('admin/users/table.location'),
+                trans('general.department'),
+                trans('admin/users/general.department_manager'),
+                trans('general.assets'),
+                trans('general.licenses'),
+                trans('general.accessories'),
+                trans('general.consumables'),
+                trans('admin/users/table.managed_users'),
+                trans('admin/users/table.managed_locations'),
+                trans('general.groups'),
+                trans('general.permissions'),
+                trans('general.notes'),
+                trans('admin/users/table.activated'),
+                trans('admin/settings/general.ldap_enabled'),
+                trans('admin/users/general.two_factor_enrolled'),
+                trans('admin/users/general.two_factor_active'),
+                trans('general.autoassign_licenses'),
+                trans('admin/users/general.remote'),
+                trans('admin/users/general.vip_label'),
+                trans('general.language'),
+                trans('general.start_date'),
+                trans('general.end_date'),
+                trans('general.last_login'),
+                trans('general.updated_at'),
+                trans('general.created_at'),
+                trans('general.created_by'),
+            );
+
+
+
             $users = User::with(
                 'assets',
                 'accessories',
@@ -567,64 +626,7 @@ class UsersController extends Controller
                 'managesUsers as manages_users_count',
                 'managedLocations as manages_locations_count'
             ])->orderBy('created_at', 'DESC')
-                ->chunk(500, function ($users) use ($handle) {
-
-                    $headers = [
-                        // strtolower to prevent Excel from trying to open it as a SYLK file
-                        strtolower(trans('general.id')),
-                        trans('admin/companies/table.title'),
-                        trans('admin/users/table.title'),
-                        trans('general.employee_number'),
-                        trans('admin/users/table.first_name'),
-                        trans('admin/users/table.last_name'),
-                        trans('admin/users/table.name'),
-                        trans('admin/users/table.username'),
-                        trans('admin/users/table.display_name'),
-                    ];
-
-                    if (auth()->user()->can('manageContactInfo')) {
-                        array_push($headers,
-                                trans('admin/users/table.email'),
-                                trans('admin/users/table.phone'),
-                                trans('admin/users/table.mobile'),
-                                trans('general.address'),
-                                trans('general.city'),
-                                trans('general.state'),
-                                trans('general.country'),
-                                trans('general.zip'),
-                                trans('general.website'));
-
-                    }
-
-                    array_push($headers,
-                        trans('admin/users/table.manager'),
-                        trans('admin/users/table.location'),
-                        trans('general.department'),
-                        trans('admin/users/general.department_manager'),
-                        trans('general.assets'),
-                        trans('general.licenses'),
-                        trans('general.accessories'),
-                        trans('general.consumables'),
-                        trans('admin/users/table.managed_users'),
-                        trans('admin/users/table.managed_locations'),
-                        trans('general.groups'),
-                        trans('general.permissions'),
-                        trans('general.notes'),
-                        trans('admin/users/table.activated'),
-                        trans('admin/settings/general.ldap_enabled'),
-                        trans('admin/users/general.two_factor_enrolled'),
-                        trans('admin/users/general.two_factor_active'),
-                        trans('general.autoassign_licenses'),
-                        trans('admin/users/general.remote'),
-                        trans('admin/users/general.vip_label'),
-                        trans('general.language'),
-                        trans('general.start_date'),
-                        trans('general.end_date'),
-                        trans('general.last_login'),
-                        trans('general.updated_at'),
-                        trans('general.created_at'),
-                        trans('general.created_by'),
-                    );
+                ->chunk(500, function ($users) use ($handle, $headers) {
 
 
                     fputcsv($handle, $headers);

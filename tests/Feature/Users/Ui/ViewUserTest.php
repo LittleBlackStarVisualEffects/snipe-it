@@ -38,4 +38,5 @@ class ViewUserTest extends TestCase
             ->get(route('users.show', $user))
             ->assertStatus(302);
     }
+
 }
