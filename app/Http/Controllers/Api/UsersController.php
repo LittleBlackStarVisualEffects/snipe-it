@@ -397,27 +397,34 @@ class UsersController extends Controller
      */
     public function selectlist(Request $request) : array
     {
-        $users = User::select(
-            [
-                'users.id',
-                'users.username',
-                'users.employee_num',
-                'users.first_name',
-                'users.last_name',
-                'users.display_name',
-                'users.gravatar',
-                'users.avatar',
-                'users.email',
-            ]
-            )->where('show_in_list', '=', '1');
+
+        $select_array = [
+            'users.id',
+            'users.username',
+            'users.employee_num',
+            'users.first_name',
+            'users.last_name',
+            'users.display_name',
+            'users.gravatar',
+            'users.avatar',
+        ];
+
+        if (auth()->user()->can('manageContactInfo')) {
+            array_push($select_array, 'users.email');
+        }
+
+        $users = User::select($select_array)->where('show_in_list', '=', '1');
+
 
         if ($request->filled('search')) {
             $users = $users->where(function ($query) use ($request) {
-                $query->SimpleNameSearch($request->input('search'))
-                    ->orWhere('username', 'LIKE', '%'.$request->input('search').'%')
-                    ->orWhere('display_name', 'LIKE', '%'.$request->input('search').'%')
-                    ->orWhere('email', 'LIKE', '%'.$request->input('search').'%')
-                    ->orWhere('employee_num', 'LIKE', '%'.$request->input('search').'%');
+                $query->SimpleNameSearch($request->input('search'));
+
+                // Check that the requesting user can search against the email field
+                if (auth()->user()->can('manageContactInfo')) {
+                    $query->orWhere('users.email', 'LIKE', '%'.$request->input('search').'%');
+                }
+
             });
         }
 
@@ -566,6 +573,7 @@ class UsersController extends Controller
 
         // Pull out sensitive fields that require extra permission
         $user->fill($request->except(['password', 'username', 'email', 'activated', 'permissions', 'activation_code', 'remember_token', 'two_factor_secret', 'two_factor_enrolled', 'two_factor_optin']));
+
 
 
         if (auth()->user()->can('canEditAuthFields', $user) && auth()->user()->can('editableOnDemo')) {
