@@ -234,7 +234,7 @@ return array(
 
     'userscontact' => [
         'name' => 'View/Edit User Contact Info',
-        'note' => 'Allows the user to view and edit personal contact information about the user. This includes: address, city, state/province, country, postal code, phone number, mobile number, email and website. ',
+        'note' => 'Allows the user to view and edit personal contact information about the user. This includes: address, city, state/province, country, postal code, phone number, mobile number, email address, and website.',
     ],
     'models'   => [
         'name' => 'Models',
