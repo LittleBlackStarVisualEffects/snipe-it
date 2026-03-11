@@ -1095,9 +1095,11 @@ class User extends SnipeModel implements AuthenticatableContract, AuthorizableCo
      */
     public function scopeSimpleNameSearch($query, $search)
     {
-        return $query->where('first_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('last_name', 'LIKE', '%' . $search . '%')
-            ->orWhere('display_name', 'LIKE', '%' . $search . '%')
+        return $query->where('users.first_name', 'LIKE', '%' . $search . '%')
+            ->orWhere('users.last_name', 'LIKE', '%' . $search . '%')
+            ->orWhere('users.username', 'LIKE', '%' . $search . '%')
+            ->orWhere('users.display_name', 'LIKE', '%' . $search . '%')
+            ->orWhere('users.employee_num', 'LIKE', '%' . $search . '%')
             ->orWhereMultipleColumns(
                 [
                 'users.first_name',
