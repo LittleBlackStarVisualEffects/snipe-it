@@ -129,7 +129,7 @@ class UserPresenter extends Presenter
                 'visible' => false,
                 'formatter' => 'trueFalseFormatter',
             ]
-            ];
+        ];
 
 
         $sensitive_fields = [
@@ -211,8 +211,11 @@ class UserPresenter extends Presenter
             ]
         ];
 
+        // Add the sensitive fields in if the user can see them
         if (auth()->user()->can('manageContactInfo')) {
-            array_push($layout, $sensitive_fields);
+            foreach ($sensitive_fields as $sensitive_field) {
+                array_push($layout, $sensitive_field);
+            }
         }
 
         array_push($layout,
