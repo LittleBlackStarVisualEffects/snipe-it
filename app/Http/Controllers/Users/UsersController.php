@@ -89,7 +89,19 @@ class UsersController extends Controller
         $this->authorize('create', User::class);
         $user = new User;
         //Username, email, and password need to be handled specially because the need to respect config values on an edit.
-        $user->email = trim($request->input('email'));
+
+        if (auth()->user()->can('manageContactInfo')) {
+            $user->email = trim($request->input('email'));
+            $user->phone = $request->input('phone');
+            $user->mobile = $request->input('mobile');
+            $user->address = $request->input('address', null);
+            $user->city = $request->input('city', null);
+            $user->state = $request->input('state', null);
+            $user->country = $request->input('country', null);
+            $user->zip = $request->input('zip', null);
+            $user->website = $request->input('website', null);
+        }
+
         $user->username = trim($request->input('username'));
         $user->display_name = $request->input('display_name');
         if ($request->filled('password')) {
@@ -101,20 +113,15 @@ class UsersController extends Controller
         $user->employee_num = $request->input('employee_num');
         $user->activated = $request->input('activated', 0);
         $user->jobtitle = $request->input('jobtitle');
-        $user->phone = $request->input('phone');
-        $user->mobile = $request->input('mobile');
+
         $user->location_id = $request->input('location_id', null);
         $user->department_id = $request->input('department_id', null);
         $user->company_id = Company::getIdForUser($request->input('company_id', null));
         $user->manager_id = $request->input('manager_id', null);
         $user->notes = $request->input('notes');
-        $user->address = $request->input('address', null);
-        $user->city = $request->input('city', null);
-        $user->state = $request->input('state', null);
-        $user->country = $request->input('country', null);
-        $user->zip = $request->input('zip', null);
+
         $user->remote = $request->input('remote', 0);
-        $user->website = $request->input('website', null);
+
         $user->created_by = auth()->id();
         $user->start_date = $request->input('start_date', null);
         $user->end_date = $request->input('end_date', null);
@@ -269,6 +276,19 @@ class UsersController extends Controller
 
         // Update the user fields
 
+        if (auth()->user()->can('manageContactInfo')) {
+            $user->email = trim($request->input('email'));
+            $user->phone = $request->input('phone');
+            $user->mobile = $request->input('mobile');
+            $user->address = $request->input('address', null);
+            $user->city = $request->input('city', null);
+            $user->state = $request->input('state', null);
+            $user->country = $request->input('country', null);
+            $user->zip = $request->input('zip', null);
+            $user->website = $request->input('website', null);
+        }
+
+
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
         $user->display_name = $request->input('display_name');
@@ -276,21 +296,13 @@ class UsersController extends Controller
         $user->locale = $request->input('locale');
         $user->employee_num = $request->input('employee_num');
         $user->jobtitle = $request->input('jobtitle', null);
-        $user->phone = $request->input('phone');
-        $user->mobile = $request->input('mobile');
         $user->location_id = $request->input('location_id', null);
         $user->company_id = Company::getIdForUser($request->input('company_id', null));
         $user->manager_id = $request->input('manager_id', null);
         $user->notes = $request->input('notes');
         $user->department_id = $request->input('department_id', null);
-        $user->address = $request->input('address', null);
-        $user->city = $request->input('city', null);
-        $user->state = $request->input('state', null);
-        $user->country = $request->input('country', null);
-        $user->zip = $request->input('zip', null);
         $user->remote = $request->input('remote', 0);
         $user->vip = $request->input('vip', 0);
-        $user->website = $request->input('website', null);
         $user->start_date = $request->input('start_date', null);
         $user->end_date = $request->input('end_date', null);
         $user->autoassign_licenses = $request->input('autoassign_licenses', 0);
@@ -487,10 +499,14 @@ class UsersController extends Controller
             // Blank out some fields
             $user->first_name = '';
             $user->last_name = '';
-            $user->email = substr($user->email, ($pos = strpos($user->email, '@')) !== false ? $pos : 0);
+
             $user->id = null;
             $user->username = null;
             $user->avatar = null;
+
+            if (auth()->user()->can('manageContactInfo')) {
+                $user->email = substr($user->email, ($pos = strpos($user->email, '@')) !== false ? $pos : 0);
+            }
 
             // Get this user's groups
             $userGroups = $user_to_clone->groups()->pluck('name', 'id');
