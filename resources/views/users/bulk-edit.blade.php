@@ -107,7 +107,7 @@
                             </div>
                         </div>
 
-                        @can('manageContactInfo', $user)
+                        @can('manageContactInfo')
                         <!-- City -->
                         <div class="form-group{{ $errors->has('city') ? ' has-error' : '' }}">
                             <label class="col-md-3 control-label" for="city">{{ trans('general.city') }}</label>
