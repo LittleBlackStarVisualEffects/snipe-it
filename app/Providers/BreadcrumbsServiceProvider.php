@@ -618,14 +618,14 @@ class BreadcrumbsServiceProvider extends ServiceProvider
             ->push($user->display_name ?? 'Missing Username!', route('users.show', $user))
         );
 
-        Breadcrumbs::for('users.edit', fn (Trail $trail, User $user) =>
+       Breadcrumbs::for('users.edit', fn (Trail $trail, User $user) =>
         $trail->parent('users.index', route('users.index'))
             ->push($user->display_name, route('users.show', $user))
             ->push(trans('general.update'))
         );
 
 
-
+       
     }
 
 
