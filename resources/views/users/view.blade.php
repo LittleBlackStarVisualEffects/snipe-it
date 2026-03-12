@@ -162,7 +162,7 @@
           </li>
         @endcan
 
-        @can('manageFiles', $user)
+        @can('update', $user)
           <li class="pull-right">
               <a href="#" data-toggle="modal" data-target="#uploadFileModal">
               <span class="hidden-xs"><x-icon type="paperclip" /></span>
@@ -1114,7 +1114,7 @@
     </div><!-- nav-tabs-custom -->
   </div>
 
-  @can('update', \App\Models\User::class)
+  @can('update', $user)
     @include ('modals.upload-file', ['item_type' => 'user', 'item_id' => $user->id])
   @endcan
 

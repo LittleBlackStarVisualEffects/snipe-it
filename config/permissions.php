@@ -252,10 +252,6 @@ return [
             'display'    => true,
         ],
         [
-            'permission' => 'users.files',
-            'display'    => true,
-        ],
-        [
             'permission' => 'users.contact',
             'display'    => true,
         ],
