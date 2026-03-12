@@ -397,7 +397,7 @@ class AssetsController extends Controller
 
         // This handles all of the pivot sorting (versus the assets.* fields
         // in the allowed_columns array)
-        $column_sort = in_array($sort_override, $allowed_columns) ? $sort_override : 'assets.created_at';
+        $column_sort = in_array($sort_override, $allowed_columns) ? 'assets.'.$sort_override : 'assets.created_at';
 
         $order = $request->input('order') === 'asc' ? 'asc' : 'desc';
 
@@ -453,7 +453,7 @@ class AssetsController extends Controller
 
                     // This may not work for all databases, but it works for MySQL
                     if ($numeric_sort) {
-                        $assets->orderByRaw(DB::getTablePrefix() . 'assets.' . $sort_override . ' * 1 ' . $order);
+                        $assets->orderByRaw(DB::getTablePrefix() . $column_sort . ' * 1 ' . $order);
                     } else {
                         $assets->orderBy($sort_override, $order);
                     }
