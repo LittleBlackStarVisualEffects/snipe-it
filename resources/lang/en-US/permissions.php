@@ -235,7 +235,7 @@ return [
         'name' => 'View/Edit User Contact Info',
         'note' => 'Allows the user to view and edit personal contact information about the user. This includes: address, city, state/province, country, postal code, phone number, mobile number, email address, and website.',
     ],
-    'models'   => [
+    'models' => [
         'name' => 'Models',
         'note' => 'Grants access to the Models section of the application.',
     ],
