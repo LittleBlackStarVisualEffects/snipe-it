@@ -15,7 +15,10 @@ use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\CurrentInventory;
 use App\Notifications\WelcomeNotification;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
@@ -96,7 +99,7 @@ class UsersController extends Controller
     {
         $this->authorize('create', User::class);
         $user = new User;
-        //Username, email, and password need to be handled specially because the need to respect config values on an edit.
+        // Username, email, and password need to be handled specially because the need to respect config values on an edit.
 
         if (auth()->user()->can('manageContactInfo')) {
             $user->email = trim($request->input('email'));
@@ -305,7 +308,6 @@ class UsersController extends Controller
             $user->zip = $request->input('zip', null);
             $user->website = $request->input('website', null);
         }
-
 
         $user->first_name = $request->input('first_name');
         $user->last_name = $request->input('last_name');
@@ -636,8 +638,6 @@ class UsersController extends Controller
                 trans('general.created_by'),
             );
 
-
-
             $users = User::with(
                 'assets',
                 'accessories',
@@ -648,18 +648,17 @@ class UsersController extends Controller
                 'groups',
                 'userloc',
                 'company'
-            ) ->withCount([
-                'assets as assets_count' => function(Builder $query) {
+            )->withCount([
+                'assets as assets_count' => function (Builder $query) {
                     $query->withoutTrashed();
                 },
                 'licenses as licenses_count',
                 'accessories as accessories_count',
                 'consumables as consumables_count',
                 'managesUsers as manages_users_count',
-                'managedLocations as manages_locations_count'
+                'managedLocations as manages_locations_count',
             ])->orderBy('created_at', 'DESC')
                 ->chunk(500, function ($users) use ($handle, $headers) {
-
 
                     fputcsv($handle, $headers);
 

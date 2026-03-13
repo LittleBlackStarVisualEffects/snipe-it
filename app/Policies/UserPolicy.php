@@ -10,7 +10,7 @@ class UserPolicy extends SnipePermissionsPolicy
     {
         return 'users';
     }
-    
+
     public function manageContactInfo(User $user)
     {
         return $user->hasAccess('users.contact');

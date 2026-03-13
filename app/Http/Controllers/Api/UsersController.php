@@ -199,7 +199,6 @@ class UsersController extends Controller
             $users = $users->where('users.company_id', '=', $request->input('company_id'));
         }
 
-
         // Check that the user can view contact info
         if (auth()->user()->can('manageContactInfo')) {
 
@@ -232,7 +231,6 @@ class UsersController extends Controller
             }
         }
 
-
         if ($request->filled('location_id')) {
             $users = $users->where('users.location_id', '=', $request->input('location_id'));
         }
@@ -260,7 +258,6 @@ class UsersController extends Controller
         if ($request->filled('employee_num')) {
             $users = $users->where('users.employee_num', '=', $request->input('employee_num'));
         }
-
 
         if ($request->filled('group_id')) {
             $users = $users->ByGroup($request->input('group_id'));
@@ -409,7 +406,6 @@ class UsersController extends Controller
         }
 
         $users = User::select($select_array)->where('show_in_list', '=', '1');
-
 
         if ($request->filled('search')) {
             $users = $users->where(function ($query) use ($request) {
@@ -568,8 +564,6 @@ class UsersController extends Controller
         // Pull out sensitive fields that require extra permission
         $user->fill($request->except(['password', 'username', 'email', 'activated', 'permissions', 'activation_code', 'remember_token', 'two_factor_secret', 'two_factor_enrolled', 'two_factor_optin']));
 
-
-
         if (auth()->user()->can('canEditAuthFields', $user) && auth()->user()->can('editableOnDemo')) {
 
             if ($request->filled('password')) {
@@ -624,7 +618,6 @@ class UsersController extends Controller
 
         }
 
-
         if (auth()->user()->cannot('manageContactInfo')) {
             $request->request->remove('phone');
             $request->request->remove('mobile');
@@ -635,7 +628,6 @@ class UsersController extends Controller
             $request->request->remove('zip');
             $request->request->remove('website');
         }
-
 
         if ($request->filled('display_name')) {
             $user->display_name = $request->input('display_name');
