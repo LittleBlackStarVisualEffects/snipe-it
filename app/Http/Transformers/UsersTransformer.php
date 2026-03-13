@@ -143,11 +143,9 @@ class UsersTransformer
      * allowing us to 1) deliver a smaller payload and 2) avoid additional queries on relations that
      * have not been easy/lazy loaded already
      *
-     * @param User $user
-     * @return array
      * @throws \Exception
      */
-    public function transformUserCompact(User $user) : array
+    public function transformUserCompact(User $user): array
     {
 
         $array = [
@@ -161,8 +159,8 @@ class UsersTransformer
             'display_name' => e($user->display_name),
             'created_by' => $user->adminuser ? [
                 'id' => (int) $user->adminuser->id,
-                'name'=> e($user->adminuser->present()->fullName),
-            ]: null,
+                'name' => e($user->adminuser->present()->fullName),
+            ] : null,
             'created_at' => Helper::getFormattedDateObject($user->created_at, 'datetime'),
             'deleted_at' => ($user->deleted_at) ? Helper::getFormattedDateObject($user->deleted_at, 'datetime') : null,
         ];
