@@ -24,8 +24,8 @@
 @if ((isset($item->name)) && ($item->name!=''))
 | **{{ trans('mail.asset_name') }}** | {{ $item->name }} |
 @endif
-@if (isset($item->assetstatus))
-| **{{ trans('general.status') }}** | {{ $item->assetstatus->name }}
+@if (isset($item->statuslabel))
+    | **{{ trans('general.status') }}** | {{ $item->statuslabel->name }}
 @endif
 @if ($item->assignedTo)
 | **{{ trans('general.checked_out_to') }}** | {!! $item->assignedTo->present()->nameUrl() !!} ({{ $item->present()->statusMeta }})

@@ -45,10 +45,16 @@ class AssetsTransformer
             'model_number' => (($asset->model) && ($asset->model->model_number)) ? e($asset->model->model_number) : null,
             'eol' => (($asset->asset_eol_date != '') && ($asset->purchase_date != '')) ? (int) Carbon::parse($asset->asset_eol_date)->diffInMonths($asset->purchase_date, true).' months' : null,
             'asset_eol_date' => ($asset->asset_eol_date != '') ? Helper::getFormattedDateObject($asset->asset_eol_date, 'date') : null,
-            'status_label' => ($asset->assetstatus) ? [
-                'id' => (int) $asset->assetstatus->id,
-                'name' => e($asset->assetstatus->name),
-                'status_type' => e($asset->assetstatus->getStatuslabelType()),
+            'status_label' => ($asset->statuslabel) ? [
+                'id' => (int) $asset->statuslabel->id,
+                'name' => e($asset->statuslabel->name),
+                'status_type' => e($asset->statuslabel->getStatuslabelType()),
+                'status_meta' => e($asset->present()->statusMeta),
+            ] : null, // legacy - this will be renamed soon - use statuslabel below
+            'statuslabel' => ($asset->statuslabel) ? [
+                'id' => (int) $asset->statuslabel->id,
+                'name' => e($asset->statuslabel->name),
+                'status_type' => e($asset->statuslabel->getStatuslabelType()),
                 'status_meta' => e($asset->present()->statusMeta),
             ] : null,
             'category' => (($asset->model) && ($asset->model->category)) ? [
@@ -250,7 +256,7 @@ class AssetsTransformer
             'model_number' => (($asset->model) && ($asset->model->model_number)) ? e($asset->model->model_number) : null,
             'expected_checkin' => Helper::getFormattedDateObject($asset->expected_checkin, 'date'),
             'location' => ($asset->location) ? e($asset->location->name) : null,
-            'status' => ($asset->assetstatus) ? $asset->present()->statusMeta : null,
+            'status' => ($asset->statuslabel) ? $asset->present()->statusMeta : null,
             'assigned_to_self' => ($asset->assigned_to == auth()->id()),
         ];
 

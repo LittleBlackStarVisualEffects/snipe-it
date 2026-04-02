@@ -50,8 +50,8 @@
 @if ((isset($asset->model?->model_number)))
 | **{{ trans('general.model_no') }}** | {{ $asset->model->model_number }} |
 @endif
-@if (isset($asset->assetstatus))
-| **{{ trans('general.status') }}** | {{ $asset->assetstatus->name }} |
+        @if (isset($asset->statuslabel))
+            | **{{ trans('general.status') }}** | {{ $asset->statuslabel->name }} |
 @endif
 @if($asset->fields)
 @foreach($asset->fields as $field)

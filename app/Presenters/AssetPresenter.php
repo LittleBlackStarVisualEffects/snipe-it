@@ -92,7 +92,7 @@ class AssetPresenter extends Presenter
                 'visible' => true,
                 'formatter' => 'categoriesLinkObjFormatter',
             ], [
-                'field' => 'status_label',
+                'field' => 'statuslabel',
                 'searchable' => true,
                 'sortable' => true,
                 'title' => trans('admin/hardware/table.status'),
@@ -486,8 +486,8 @@ class AssetPresenter extends Presenter
             $imageAlt = $this->model->name;
         }
         if (! empty($imagePath)) {
-            $url = Storage::disk('public')->url(app('assets_upload_path') . e($imagePath));
-            $imagePath = '<img src="' . $url . '" height="50" width="50" alt="' . e($imageAlt) . '">';
+            $url = Storage::disk('public')->url(app('assets_upload_path').e($imagePath));
+            $imagePath = '<img src="'.$url.'" height="50" width="50" alt="'.e($imageAlt).'">';
         }
 
         return $imagePath;
@@ -507,7 +507,7 @@ class AssetPresenter extends Presenter
             $imagePath = $this->model->image;
         }
         if (! empty($imagePath)) {
-            return Storage::disk('public')->url(app('assets_upload_path') . e($imagePath));
+            return Storage::disk('public')->url(app('assets_upload_path').e($imagePath));
         }
 
         return $imagePath;
@@ -596,7 +596,7 @@ class AssetPresenter extends Presenter
             return 'deployed';
         }
 
-        return $this->model->assetstatus->getStatuslabelType();
+        return $this->model->statuslabel->getStatuslabelType();
     }
 
     /**
@@ -610,7 +610,7 @@ class AssetPresenter extends Presenter
             return trans('general.deployed');
         }
 
-        return $this->model->assetstatus->name;
+        return $this->model->statuslabel->name;
     }
 
     /**
@@ -630,14 +630,14 @@ class AssetPresenter extends Presenter
     public function fullStatusText()
     {
         // Make sure the status is valid
-        if ($this->assetstatus) {
+        if ($this->statuslabel) {
 
             // If the status is assigned to someone or something...
             if ($this->model->assigned) {
 
                 // If it's assigned and not set to the default "ready to deploy" status
-                if ($this->assetstatus->name != trans('general.ready_to_deploy')) {
-                    return trans('general.deployed').' ('.$this->model->assetstatus->name.')';
+                if ($this->statuslabel->name != trans('general.ready_to_deploy')) {
+                    return trans('general.deployed').' ('.$this->model->statuslabel->name.')';
                 }
 
                 // If it's assigned to the default "ready to deploy" status, just
@@ -647,7 +647,7 @@ class AssetPresenter extends Presenter
             }
 
             // Return just the status name
-            return $this->model->assetstatus->name;
+            return $this->model->statuslabel->name;
         }
 
         // This status doesn't seem valid - either data has been manually edited or
